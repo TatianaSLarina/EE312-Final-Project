@@ -12,9 +12,9 @@ using namespace std;
 #ifndef UNTITLED8_HASH_H
 #define UNTITLED8_HASH_H
 
-class hash{
+class hashes{
 private:
-    static const int tableSize =10;
+    static const int tableSize =1000;
 
     struct item{
         string filename;
@@ -25,10 +25,10 @@ private:
     item* HashTable[tableSize];
 
 public:
-    hash();
+    hashes();
     int Hash(string chunkingString);
     int getdir (string dir, vector<string> &files);
-    void addData(string filename, string index);
+    void addData(string chunkingString, string filename, int index);
 };
 
 

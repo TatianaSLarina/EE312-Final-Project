@@ -12,17 +12,28 @@
 
 using namespace std;
 
-int main() {
-    hash Hash1;
+int main(int argc, char *argv[]) {
+    hashes Hash1;
     string dir = string("sm_doc_set");
     vector<string> files = vector<string>();
+    int i = 0;
+    int nWordsequence = atoi(argv[1])-1;
 
     Hash1.getdir(dir,files);
-    ifstream file(files[2].c_str());    // work on changing it so that it goes through a loop and reads all the documents
-    stringstream buffer;
-    buffer << file.rdbuf();
-    string chunkingDocument = buffer.str();
 
+    for(int Size = files.size(); Size!=0; Size--){
+        ifstream file(files[i].c_str());
+        stringstream buffer;
+        buffer << file.rdbuf();
+        string chunkingDocument = buffer.str();
+        i++;
+
+        int index = 0;
+        for(int lengthOfchunkingDocument = chunkingDocument.length(); lengthOfchunkingDocument != 0; lengthOfchunkingDocument --){
+            string tempstring = chunkingDocument.substr (index, index+nWordsequence);
+            Hash1.addData(tempstring, files[i], index);
+        }
+    }
 
 
     return 0;

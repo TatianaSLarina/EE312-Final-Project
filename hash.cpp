@@ -20,7 +20,7 @@ using namespace std;
 //            the filename, the index value of where the n-letter phrase starts
 //            and the pointer to the next node in case there is another item to
 //            be placed at that index
-hash::hash() {
+hashes::hashes() {
     for(int i = 0; i < tableSize; i++){
         HashTable[i] = new item ;
         HashTable[i] -> filename = "N/A" ;
@@ -31,14 +31,14 @@ hash::hash() {
 }
 
 //Function: Hash():
-//Input Parameter: The chunk of data that is going to be compared to see if
+//Input Parameter: 1st value-The chunk of data that is going to be compared to see if
 //there are others with similar phrases.
 //Output Parameter: Index value of where to insert Input Parameter data into
 //the HashTable
 //Definition: Going to return an index value of where to insert the file
 //information by adding up the string's ASCII values (not including punctuation)
 //and comparing with others.
-int hash::Hash(string chunkingString){
+int hashes::Hash(string chunkingString){
     int hash = 0;
     int index;
 
@@ -46,7 +46,7 @@ int hash::Hash(string chunkingString){
         hash = hash + (int)chunkingString[i];
     }
 
-    index = hash % tableSize;
+    index = hash;
     return index;
 }
 
@@ -56,7 +56,7 @@ int hash::Hash(string chunkingString){
 //Output Parameter: return 0 value
 //Definition: Going to go to the directory and put the files in the
 //file vector
-int hash::getdir (string dir, vector<string> &files)
+int hashes::getdir (string dir, vector<string> &files)
 {
     DIR *dp;
     struct dirent *dirp;
@@ -73,13 +73,14 @@ int hash::getdir (string dir, vector<string> &files)
 }
 
 //Function: addData():
-//Input Parameter: 1st value-the filename of the document, 2nd
+//Input Parameter: 1st-The chunk of data that is going to be compared to see if
+//there are others with similar phrases, 2nd value-the filename of the document, 3rd
 //value-the index of where the chunk starts.
 //Output Parameter: No Output Parameters
 //Definition: Inserts the filename and the index of where the
 //chunk of the string starts into the HashTable.
-void hash::addData(string filename, string index) {
-    int index1 = Hash(filename);
+void hashes::addData(string chunkingString, string filename, int index) {
+    int index1 = Hash(chunkingString);
 
     if(HashTable[index1] -> filename == "N/A"){
         HashTable[index1] -> filename = filename;
