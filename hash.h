@@ -26,11 +26,9 @@ private:
 
 public:
     hash();
-    int Hash(string key);
+    int Hash(string chunkingString);
     int getdir (string dir, vector<string> &files);
-    void Additem(string filename, string index);
-    int ItemsTotal(int index);
-    void PrintTable();
+    void addData(string filename, string index);
 };
 
 

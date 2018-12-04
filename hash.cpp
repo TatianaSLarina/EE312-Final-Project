@@ -23,11 +23,31 @@ using namespace std;
 hash::hash() {
     for(int i = 0; i < tableSize; i++){
         HashTable[i] = new item ;
-        HashTable[i] -> filename = "empty" ;
-        HashTable[i] -> index = "empty" ;
+        HashTable[i] -> filename = "N/A" ;
+        HashTable[i] -> index = "N/A" ;
         HashTable[i] -> next = NULL ;
     }
 
+}
+
+//Function: Hash():
+//Input Parameter: The chunk of data that is going to be compared to see if
+//there are others with similar phrases.
+//Output Parameter: Index value of where to insert Input Parameter data into
+//the HashTable
+//Definition: Going to return an index value of where to insert the file
+//information by adding up the string's ASCII values (not including punctuation)
+//and comparing with others.
+int hash::Hash(string chunkingString){
+    int hash = 0;
+    int index;
+
+    for(int i =0; i < chunkingString.length(); i++){
+        hash = hash + (int)chunkingString[i];
+    }
+
+    index = hash % tableSize;
+    return index;
 }
 
 //Function: getdir():
@@ -52,14 +72,16 @@ int hash::getdir (string dir, vector<string> &files)
     return 0;
 }
 
-//Function: Additem():
-//Input Parameter:
-//Output Parameter:
-//Definition:
-void hash::Additem(string filename, string index) {
+//Function: addData():
+//Input Parameter: 1st value-the filename of the document, 2nd
+//value-the index of where the chunk starts.
+//Output Parameter: No Output Parameters
+//Definition: Inserts the filename and the index of where the
+//chunk of the string starts into the HashTable.
+void hash::addData(string filename, string index) {
     int index1 = Hash(filename);
 
-    if(HashTable[index1] -> filename == "empty"){
+    if(HashTable[index1] -> filename == "N/A"){
         HashTable[index1] -> filename = filename;
         HashTable[index1] -> index = index;
     }
@@ -78,57 +100,5 @@ void hash::Additem(string filename, string index) {
 
         item1 -> next = item2;
     }
-}
-
-//Function: ItemsTotal():
-//Input Parameter:
-//Output Parameter:
-//Definition:
-int hash::ItemsTotal(int index) {
-    int count = 0;
-
-    if(HashTable[index]->filename == "empty") {
-        return count;
-    }
-    else{
-        count++;
-        item* item1 = HashTable[index];
-        while(item1 -> next != NULL){
-            count++;
-            item1 = item1 -> next;
-        }
-    }
-    return count;
-}
-
-//Function: PrintTable():
-//Input Parameter:
-//Output Parameter:
-//Definition:
-void hash::PrintTable() {
-    int number;
-    for(int i=0; i < tableSize; i++){
-        number = ItemsTotal(i);
-        cout << "index = " << i << endl;
-        cout << HashTable[i]->filename << endl;
-        cout << HashTable[i]->index << endl;
-        cout << number << endl;
-    }
-}
-
-//Function: Hash():
-//Input Parameter:
-//Output Parameter:
-//Definition:
-int hash::Hash(string key){
-    int hash = 0;
-    int index;
-
-    for(int i =0; i < key.length(); i++){
-        hash = hash + (int)key[i];
-    }
-
-    index = hash % tableSize;
-    return index;
 }
 

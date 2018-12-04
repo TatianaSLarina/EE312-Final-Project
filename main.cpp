@@ -18,12 +18,12 @@ int main() {
     vector<string> files = vector<string>();
 
     Hash1.getdir(dir,files);
-    ifstream file(files[2].c_str());
+    ifstream file(files[2].c_str());    // work on changing it so that it goes through a loop and reads all the documents
     stringstream buffer;
     buffer << file.rdbuf();
-    string test = buffer.str();
-    cout << test << endl;
+    string chunkingDocument = buffer.str();
 
-    
+
+
     return 0;
 }
