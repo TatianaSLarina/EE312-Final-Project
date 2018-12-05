@@ -11,14 +11,81 @@
 #include <dirent.h>
 #include <errno.h>
 
+#include "hash.h"
 using namespace std;
 
 //Function: getdir():
 //Input Parameter: 1st value-the directory string value,
 //                 2nd value-the location of the vector of where the files are going to be
 //Output Parameter: return 0 value
-//Definition: Going to go to the directory and put the files in the
-//file vector
+//Definition: Going to go to the directory and put the files in the file vector
+int getdir (string dir, vector<string> &files);
+
+//Function: readfile():
+//Input Parameters: 1st value-the empty file vector where the file path names are stored
+//                  2nd value-the index value of the file that needs to be read
+//Output Parameters: the string value of the documents contents
+//Definition: Going to read the correct file and output a string with the contents of the
+//file that is going to be parsed through later
+string readfile(vector<string> files, int i);
+
+//Function: gettingChunk():
+//Input Parameters: 1st value-the number of words that need to be in the chunk (second input in command line)
+//                  2nd value-the location of where the chunk queue array is going to be stored
+//                  3rd value-the string value of the document in question (words from document)
+//                  4th value-index value of where in the document we are going to start the chunk reading
+//Output Parameters: the vector of the words that are going to later be concatenated into a string
+//Definition: Going to create a vector that will have n-words which will be used for concatenation later
+vector<string> gettingChunk(int nWordsequence, vector<string> chunk, string chunkingDocument, int index);
+
+//Function: chunkconcatenation():
+//Input Parameters: 1st value-the number of words that need to be in the chunk (second input in command line)
+//                  2nd value-the location of where the chunk queue array is going to be stored
+//Output Parameters: The concatenated chunk that is going to be used for later comparisons. If the concatenated chunk
+// just read "flag", then that means te file is done being read and there is no chunk to be concatenated.
+//Definition: take the vector of the nWordsequence (second input from command line) and concatenate string
+//for later comparisons
+string chunkconcatenation(int nWordsequence, vector<string> chunk);
+
+int main(int argc, char *argv[]) {
+
+    Hash table;
+    int hash;
+
+    //string dir = string(argv[1]);
+    vector<string> files = vector<string>();
+    int i = 0;
+    int beginning =0;
+    //int nWordsequence = atoi(argv[2]);
+    //getdir(dir,files);
+    files.push_back("C:\\Users\\atanz\\CLionProjects\\untitled8\\sm_doc_set\\abf0704.txt");
+    int nWordsequence = 6;
+
+    //Go through all of the files to create chunks
+    for(int Size = files.size(); Size!=0; Size--){
+        string chunkingDocument = readfile(files, i);
+        vector<string> chunk;
+        string tempstring;
+        int index = 0;
+
+        //Go through a specific file to create chunks
+        while(tempstring != "flag") {       //if tempstring="flag", then the file has finished being read
+            chunk = gettingChunk(nWordsequence, chunk, chunkingDocument, index);
+            tempstring = chunkconcatenation(nWordsequence, chunk);
+            if(tempstring == "flag"){
+                break;
+            }
+            hash = table.makeHash(tempstring, i);
+            index = index + chunk[beginning].length()+1;    //used for traversing through file for creating each chunk
+            chunk.clear();
+            tempstring.clear();
+        }
+        i++;  //the file number that is being analyzed
+    }
+
+    return 0;
+}
+
 int getdir (string dir, vector<string> &files)
 {
     DIR *dp;
@@ -41,13 +108,8 @@ int getdir (string dir, vector<string> &files)
     return 0;
 }
 
-//Function: readfile():
-//Input Parameters: 1st value-the empty file vector where the file path names are stored
-//                  2nd value-the index value of the file that needs to be read
-//Output Parameters: the string value of the documents contents
-//Definition: Going to read the correct file and output a string with the contents of the
-//file that is going to be parsed through later
-string readfile(vector<string> files, int i){
+string readfile(vector<string> files, int i)
+{
     ifstream file(files[i].c_str());
     stringstream buffer;
     buffer << file.rdbuf();
@@ -55,14 +117,8 @@ string readfile(vector<string> files, int i){
     return chunkingDocument;
 }
 
-//Function: gettingChunk():
-//Input Parameters: 1st value-the number of words that need to be in the chunk (second input in command line)
-//                  2nd value-the location of where the chunk queue array is going to be stored
-//                  3rd value-the string value of the document in question (words from document)
-//                  4th value-index value of where in the document we are going to start the chunk reading
-//Output Parameters: the vector of the words that are going to later be concatenated into a string
-//Definition: Going to create a vector that will have n-words which will be used for concatenation later
-vector<string> gettingChunk(int nWordsequence, vector<string> chunk, string chunkingDocument, int index){
+vector<string> gettingChunk(int nWordsequence, vector<string> chunk, string chunkingDocument, int index)
+{
     string tempstring;
     char period = '.';
     string space = "";
@@ -106,21 +162,14 @@ vector<string> gettingChunk(int nWordsequence, vector<string> chunk, string chun
     return chunk;
 }
 
-//Function: chunkconcatenation():
-//Input Parameters: 1st value-the number of words that need to be in the chunk (second input in command line)
-//                  2nd value-the location of where the chunk queue array is going to be stored
-//Output Parameters: The concatenated chunk that is going to be used for later comparisons. If the concatenated chunk
-// just read "flag", then that means te file is done being read and there is no chunk to be concatenated.
-//Definition: take the vector of the nWordsequence (second input from command line) and concatenate string
-//for later comparisons
-string chunkconcatenation(int nWordsequence, vector<string> chunk){
+string chunkconcatenation(int nWordsequence, vector<string> chunk)
+{
    int beginning = 0;
    string tempstring;
     if(chunk[beginning] != "flag") {
         for (int j = 0; j < nWordsequence; j++) {
             tempstring = tempstring + chunk[j];
         }
-        cout << "string:" << tempstring << endl;
     }
     else {
         tempstring = "flag";
@@ -128,35 +177,4 @@ string chunkconcatenation(int nWordsequence, vector<string> chunk){
     return tempstring;
 }
 
-int main(int argc, char *argv[]) {
-    string dir = string(argv[1]);
-    vector<string> files = vector<string>();
-    int i = 0;
-    int beginning =0;
-    int nWordsequence = atoi(argv[2]);
-    getdir(dir,files);
-
-    //Go through all of the files to create chunks
-    for(int Size = files.size(); Size!=0; Size--){
-        string chunkingDocument = readfile(files, i);
-        vector<string> chunk;
-        string tempstring;
-        int index = 0;
-
-        //Go through a specific file to create chunks
-        while(tempstring != "flag") {       //if tempstring="flag", then the file has finished being read
-            chunk = gettingChunk(nWordsequence, chunk, chunkingDocument, index);
-            tempstring = chunkconcatenation(nWordsequence, chunk);
-            if(tempstring == "flag"){
-                break;
-            }
-            index = index + chunk[beginning].length()+1;    //used for traversing through file for creating each chunk
-            chunk.clear();
-            tempstring.clear();
-        }
-        i++;  //the file number that is being analyzed
-    }
-
-    return 0;
-}
 
