@@ -52,14 +52,14 @@ int main(int argc, char *argv[]) {
     Hash table;
     int hash;
 
-    //string dir = string(argv[1]);
+    string dir = string(argv[1]);
     vector<string> files = vector<string>();
     int i = 0;
     int beginning =0;
-    //int nWordsequence = atoi(argv[2]);
-    //getdir(dir,files);
-    files.push_back("C:\\Users\\atanz\\CLionProjects\\untitled8\\sm_doc_set\\abf0704.txt");
-    int nWordsequence = 6;
+    int nWordsequence = atoi(argv[2]);
+    getdir(dir,files);
+    //files.push_back("C:\\Users\\atanz\\CLionProjects\\untitled8\\sm_doc_set\\abf0704.txt");
+    //int nWordsequence = 6;
 
     //Go through all of the files to create chunks
     for(int Size = files.size(); Size!=0; Size--){
