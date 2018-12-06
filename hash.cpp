@@ -11,6 +11,14 @@ using namespace std;
 //Function implementations for Hashtable
 *****************************************/
 
+
+/****************************
+computeHash
+
+Function: computeHash()
+Preconditions: the key for the hashing
+Postconditions: output the hash associated with the phrase
+*****************************/
 int Hash::computeHash(string s)
 {
     int length = s.length();
@@ -38,6 +46,13 @@ int Hash::computeHash(string s)
 }
 
 
+/****************************
+makeHash
+
+Function: makeHash()
+Preconditions: the hash location, the file number
+Postconditions: the hash table location
+*****************************/
 int Hash::makeHash(string s, int id)
 {	cout<<endl;
     cout<<s<<endl;
@@ -68,9 +83,10 @@ int Hash::makeHash(string s, int id)
 /****************************
 getCheaters
 
-Function:
-Preconditions:
-Postconditions:
+Function: getCheaters()
+Preconditions: the number of documents, the names of the documents, and the minimum size of what constitutes as
+cheating between two documents
+Postconditions: output the documents that pass cheating conditions
 *****************************/
 void Hash::getCheaters(int numDocs, vector<string> &names, int minCheatsize)
 {

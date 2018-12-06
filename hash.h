@@ -56,23 +56,8 @@ public:
 
     }
 
-
-/****************************
-makeHash
-
-Function:
-Preconditions:
-Postconditions:
-*****************************/
+    
     int makeHash(string s, int id);
-
-/****************************
-getCheaters
-
-Function:
-Preconditions:
-Postconditions:
-*****************************/
     void getCheaters(int numDocs, vector<string> &names, int minCheatsize);
 
 
