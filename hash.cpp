@@ -21,7 +21,6 @@ int Hash::computeHash(string s)
         double power = pow(HASH_CALC_NUM, (double)i);
         index+=s[length-i-1]*(int)power;
     }
-    cout<<index<<endl;
 
     if (index<0)
     {
@@ -73,47 +72,41 @@ Function:
 Preconditions:
 Postconditions:
 *****************************/
-void Hash::getCheaters(int numDocs, string ArrNames[])
+void Hash::getCheaters(int numDocs, vector<string> &names, int minCheatsize)
 {
-    int cheaterArr[numDocs][numDocs] = {0};
+    std::vector< vector<int> > cheaterArr(numDocs, vector<int>(numDocs));
 
     for(int i = 0; i<numDocs ; i++)
     {
         for (int j = i; j<numDocs; j++)
             cheaterArr[i][j]=0;
-
     }
 
 
     for(int i = 0; i<HASH_SIZE ; i++)
     {
         if(HashTable[i])
-        {   cout<<i<<" : ";
-
+        {
             HashList * temp = HashTable[i];
             while(temp)
             {
                 HashList * temp2 = temp->next;
                 while(temp2)
-                {	cout<<temp->fNum<< " - ";
-                    cout<<temp2->fNum<<" ,";
+                {
                     cheaterArr[temp2->fNum][temp->fNum]++;
-                    cout<<" now "<<cheaterArr[temp2->fNum][temp->fNum]<<"; ";
                     temp2 = temp2->next;
                 }
                 temp = temp->next;
             }
-            cout<<endl;
         }
     }
-    cout<<endl;
 
     for(int i = 0; i<numDocs ; i++)
     {
         for (int j = i; j<numDocs; j++)
         {
-            if (cheaterArr[i][j]>0)
-                cout<<"Coincidences between "<< ArrNames[i] <<" and "<< ArrNames[j] <<": "<<cheaterArr[i][j]<<endl;
+            if (cheaterArr[i][j]>=minCheatsize)
+                cout<<"Coincidences between "<< names[i] <<" and "<< names[j] <<": "<<cheaterArr[i][j]<<endl;
 
         }
     }

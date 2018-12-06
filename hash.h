@@ -73,7 +73,7 @@ Function:
 Preconditions:
 Postconditions:
 *****************************/
-    void getCheaters(int numDocs, string ArrNames[]);
+    void getCheaters(int numDocs, vector<string> &names, int minCheatsize);
 
 
 
