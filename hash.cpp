@@ -90,6 +90,7 @@ Postconditions: output the documents that pass cheating conditions
 *****************************/
 void Hash::getCheaters(int numDocs, vector<string> &names, int minCheatsize)
 {
+
     std::vector< vector<int> > cheaterArr(numDocs, vector<int>(numDocs));
 
     for(int i = 0; i<numDocs ; i++)
@@ -121,12 +122,173 @@ void Hash::getCheaters(int numDocs, vector<string> &names, int minCheatsize)
     {
         for (int j = i; j<numDocs; j++)
         {
+            hashNode *Node;
             if (cheaterArr[i][j]>=minCheatsize)
-                cout<<"Coincidences between "<< names[i] <<" and "<< names[j] <<": "<<cheaterArr[i][j]<<endl;
-
+                if(i==0 && j==0){
+                    hashNode *heads;
+                    heads = new hashNode;
+                    heads->fd1 = names[i];
+                    heads->fd2 = names[j];
+                    heads->instants = cheaterArr[i][j];
+                    heads->next = NULL;
+                    head = heads;
+                }
+                else{
+                    hashNode *headss;
+                    headss = new hashNode;
+                    headss->fd1 = names[i];
+                    headss->fd2 = names[j];
+                    headss->instants = cheaterArr[i][j];
+                    headss->next = NULL;
+                    Node = head;
+                    while(Node->next != NULL){
+                        Node = Node ->next;
+                    }
+                    Node->next = headss;
+                }
         }
     }
 
-
+    sorting();
+    while(head)
+    {
+        cout << "Coincidences between " << head->fd1 << " and " << head->fd2 << ": " << head->instants << endl;
+        head = head->next;
+    }
     return;
+}
+
+/**********************************************************************************************************
+Function highest_index_helper_function():
+Input Parameter: the hashNode that is going to traverse through head, the comparator for the highest index
+Output Parameter: the highest index that is currently in the list
+Definition: Finds the highest index in the function
+**********************************************************************************************************/
+int Hash:: highest_index_helper_function(hashNode *traversePtr, int lowest_index){
+// Going to the find the lowest song in the list currently
+    traversePtr=head;
+    while (traversePtr->next != NULL) {
+        if (lowest_index < traversePtr->next->instants) {
+            lowest_index = traversePtr->next->instants;
+            traversePtr = traversePtr->next;
+        }
+        else {
+            traversePtr = traversePtr->next;
+        }
+    }
+    return lowest_index;
+}
+
+/**********************************************************************************************************
+Function update_index_helper_function():
+Input Parameter: the hashNode that is going to traverse through index, the comparator for the highest index
+                 and the hashNode linked list with the updated descending order of indices
+Output Parameter: the highest index that is currently found
+Definition: Will update index with the ascending order of indices
+ *********************************************************************************************************/
+int Hash:: update_index_helper_function(int lowest_index, hashNode *traversePtr){
+    if (head != NULL) {
+        lowest_index = traversePtr->instants;
+    }
+    head = traversePtr;
+    return lowest_index;
+}
+
+
+/****************************************************************************************
+Function removesong():
+Input Parameters: lowest_index is the address of the index that is going to be removed
+from the temp array
+Output Parameter: Nothing
+***************************************************************************************/
+void Hash::removeindex(int const lowest_index){
+    hashNode *tempNode = head;
+    hashNode *Node = NULL;
+    int first_element_encountered_flag=0;
+    hashNode *finalNode = tempNode;
+
+    if(tempNode==NULL){ //List is empty
+        return;
+    }
+
+
+    while(tempNode->next!=NULL){
+        if(tempNode->instants == lowest_index){
+//First element is going to be deleted from song list
+            if(first_element_encountered_flag==0){
+                head = tempNode->next;
+                delete tempNode;
+                return;
+            }
+            else {
+//Normal case
+                Node->next = tempNode->next;
+            }
+            delete tempNode;
+            return;
+        }
+        first_element_encountered_flag++;
+        Node = tempNode;
+        tempNode = tempNode -> next;
+    }
+
+
+//last element is going to be deleted from song list
+    if(tempNode->instants == lowest_index){
+        if(first_element_encountered_flag==0){
+            head=NULL;     //if it is the only element left in the list to be deleted
+            delete tempNode;
+            return;
+        }
+        Node->next = NULL;
+        head=finalNode;
+        delete tempNode;
+        return;
+    }
+    return;
+}
+
+void Hash::sorting(){
+    hashNode *traversePtr = head;
+    hashNode *copy_Tempt = NULL;
+
+    int lowest_index = traversePtr->instants;
+    hashNode *index;
+
+    // Going to find the lowest song in the list currently
+    while (traversePtr != NULL) {
+        lowest_index = highest_index_helper_function(traversePtr, lowest_index);
+
+        // Going to add the lowest element into the temporary buffer
+        hashNode *Tempt = new hashNode;
+    while(traversePtr->instants != lowest_index){
+        traversePtr=traversePtr->next;
+
+    }
+        Tempt->fd1 = traversePtr->fd1;
+        Tempt->fd2 = traversePtr->fd2;
+        Tempt->instants = lowest_index;
+        Tempt->next = NULL;
+        hashNode *traversePtr2;
+
+        if (copy_Tempt != NULL) {
+            traversePtr2 = copy_Tempt;
+            while(traversePtr2->next != NULL) {
+                traversePtr2 = traversePtr2->next;
+            }
+            traversePtr2->next = Tempt;
+            copy_Tempt = copy_Tempt->next;
+        } else {
+            copy_Tempt = Tempt;
+            index = copy_Tempt;
+        }
+
+        removeindex(lowest_index);    // Removes the lowest song from the general songs list so can find new lowest value
+        traversePtr = head;
+        lowest_index = update_index_helper_function(lowest_index, traversePtr);
+    }
+
+    head = index;
+
+
 }

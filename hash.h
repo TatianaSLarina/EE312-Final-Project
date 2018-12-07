@@ -37,6 +37,15 @@ private:
     string processString(string s);
     int computeHash(string s);
 
+    struct hashNode
+    {
+        string fd1;
+        int instants;
+        string fd2;
+        hashNode *next;
+    };
+
+    hashNode *head;
 
 public:
 
@@ -56,10 +65,13 @@ public:
 
     }
 
-    
+
     int makeHash(string s, int id);
     void getCheaters(int numDocs, vector<string> &names, int minCheatsize);
-
+    void removeindex(int const lowest_index);
+    void sorting();
+    int update_index_helper_function(int lowest_index, hashNode *traversePtr);
+    int highest_index_helper_function(hashNode *traversePtr, int lowest_index);
 
 
 };

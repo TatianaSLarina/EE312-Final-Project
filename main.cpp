@@ -127,11 +127,11 @@ int getdir (string dir, vector<string> &files, vector<string> &names)
         else if (dontOpenfirstTwo == 1)
             dontOpenfirstTwo++;
         else
-            {
-                files.push_back(string(dir + "/" + dirp->d_name));
-                names.push_back(string(dirp->d_name));
-                i++;
-            }
+        {
+            files.push_back(string(dir + "/" + dirp->d_name));
+            names.push_back(string(dirp->d_name));
+            i++;
+        }
     }
     closedir(dp);
     return 0;
@@ -174,34 +174,34 @@ vector<string> gettingChunk(int nWordsequence, vector<string> chunk, string chun
             index++;
         }
         else if (int(chunkingDocument[index]) == const1)
-            index++;
+        index++;
         else if (int(chunkingDocument[index]) == const2)
-            index++;
+        index++;
         else
+        {
+            if(chunkingDocument[index] == period)
+                index++;
+            else
             {
-                if(chunkingDocument[index] == period)
+                if(tempstring == space)
                     index++;
                 else
-                    {
-                        if(tempstring == space)
-                            index++;
-                        else
-                            {
-                            nWordsequence--;
-                            chunk.push_back(tempstring);
-                            index++;
-                            tempstring.clear();
-                            }
-                    }
+                {
+                    nWordsequence--;
+                    chunk.push_back(tempstring);
+                    index++;
+                    tempstring.clear();
+                }
             }
+        }
     }
     return chunk;
 }
 
 string chunkconcatenation(int nWordsequence, vector<string> chunk)
 {
-   int beginning = 0;
-   string tempstring;
+    int beginning = 0;
+    string tempstring;
     if(chunk[beginning] != "flag")
     {
         for (int j = 0; j < nWordsequence; j++)
@@ -210,9 +210,9 @@ string chunkconcatenation(int nWordsequence, vector<string> chunk)
         }
     }
     else
-        {
-          tempstring = "flag";
-        }
+    {
+        tempstring = "flag";
+    }
     return tempstring;
 }
 
